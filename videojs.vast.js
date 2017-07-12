@@ -70,9 +70,13 @@
       },
 
       getContent: function () {
+        var options = {
+          'withCredentials': true,
+          'urlhandler': settings.urlhandler || null,
+        }
 
         // query vast url given in settings
-        vast.client.get(settings.url, function(response) {
+        vast.client.get(settings.url, options, function(response) {
           if (response) {
             // we got a response, deal with it
             for (var adIdx = 0; adIdx < response.ads.length; adIdx++) {
@@ -248,7 +252,7 @@
           player.controls(true);
         }
 
-        player.trigger('vast-preroll-removed');
+       	player.trigger('vast-preroll-removed');
       },
 
       timeupdate: function(e) {
@@ -299,7 +303,7 @@
 
     player.on('contentupdate', function(){
       // videojs-ads triggers this when src changes
-      player.vast.getContent(settings.url);
+      player.vast.getContent(settings.url, options);
     });
 
     player.on('readyforpreroll', function() {
@@ -314,7 +318,7 @@
 
     // make an ads request immediately so we're ready when the viewer hits "play"
     if (player.currentSrc()) {
-      player.vast.getContent(settings.url);
+      player.vast.getContent(settings.url, options);
     }
 
     // return player to allow this plugin to be chained
